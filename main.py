@@ -5,7 +5,7 @@ import os
 import re
 
 
-TOKEN = os.getenv("TOKEN")
+TOKEN = "PUT_YOUR_TOKEN"
 
 # Khởi tạo client selfbot với intents đầy đủ
 client = discord.Client()
