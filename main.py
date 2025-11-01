@@ -7,13 +7,13 @@ import re
 
 TOKEN = "PUT_YOUR_TOKEN"
 
-# Khởi tạo client selfbot với intents đầy đủ
+
 client = discord.Client()
 
 
 chui_task = None
 spamming = False
-auto_react_targets = {}  # {user_id: emoji}
+auto_react_targets = {}  
 _spam_task = None
 
 @client.event
@@ -25,20 +25,19 @@ async def on_ready():
 async def on_message(message):
     global spamming, auto_react_targets, chui_task, _spam_task  # 🛠 Chỉ khai báo ở đây
 
-    # React tự động với mọi tin nhắn (kể cả chính bạn)
+    
     if message.author.id in auto_react_targets:
         try:
             await message.add_reaction(auto_react_targets[message.author.id])
         except Exception as e:
             print(f"Lỗi khi react: {e}")
 
-    # Chỉ xử lý lệnh nếu là tin nhắn từ chính bạn
+
     if message.author.id != client.user.id:
         return
 
 
-    # ------- Các lệnh từ selfbot chính mình -------
-#lenh ;create
+
     if message.content.startswith(";create "):
         try:
             args = message.content[len(";create "):].split("-")
