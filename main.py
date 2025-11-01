@@ -23,7 +23,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    global spamming, auto_react_targets, chui_task, _spam_task  # 🛠 Chỉ khai báo ở đây
+    global spamming, auto_react_targets, chui_task, _spam_task  
 
     
     if message.author.id in auto_react_targets:
@@ -54,11 +54,11 @@ async def on_message(message):
                 await message.channel.send("⚠️ Không tìm thấy server.")
                 return
 
-            # Tạo thư mục nếu chưa có
+            
             if not os.path.exists("webhook"):
                 os.makedirs("webhook")
 
-            # Làm sạch tên server để dùng làm tên file
+            
             safe_guild_name = re.sub(r'[\\/*?:"<>|]', "_", guild.name)
             file_path = f"webhook/{safe_guild_name}.txt"
 
@@ -68,7 +68,7 @@ async def on_message(message):
                 wh = await ch.create_webhook(name=f"{channel_name}-webhook")
                 webhook_links.append(f"{ch.name}: {wh.url}")
 
-            # Ghi các link webhook vào file
+            
             with open(file_path, "a", encoding="utf-8") as f:  # "a" để ghi nối tiếp
                 f.write("\n".join(webhook_links) + "\n")
 
@@ -76,7 +76,7 @@ async def on_message(message):
         except Exception as e:
             await message.channel.send(f"❌ Lỗi: {e}")
 
-    # ;del <server_id>
+    
     elif message.content.startswith(";del "):
         try:
             guild_id = int(message.content.split(" ")[1])
@@ -96,7 +96,7 @@ async def on_message(message):
         except Exception as e:
             await message.channel.send(f"❌ Lỗi khi xoá: {e}")
 
-    # ;wh <server_id> <tên_webhook>
+    
     elif message.content.startswith(";wh "):
         try:
             args = message.content.split(" ", 2)
@@ -111,11 +111,11 @@ async def on_message(message):
                 await message.channel.send("⚠️ Không tìm thấy server.")
                 return
 
-            # Tạo thư mục nếu chưa tồn tại
+            
             if not os.path.exists("webhook"):
                 os.makedirs("webhook")
 
-            # Làm sạch tên server để dùng làm tên file
+    
             safe_guild_name = re.sub(r'[\\/*?:"<>|]', "_", guild.name)
             file_path = f"webhook/{safe_guild_name}.txt"
 
@@ -129,7 +129,7 @@ async def on_message(message):
                 except:
                     pass
 
-            # Ghi các link webhook vào file
+            
             with open(file_path, "w", encoding="utf-8") as f:
                 f.write("\n".join(webhook_links))
 
@@ -139,12 +139,12 @@ async def on_message(message):
         except Exception as e:
             await message.channel.send(f"❌ Lỗi: {e}")
 
-    # ;stop
+    
     elif message.content.strip() == ";stop":
         spamming = False
         await message.channel.send("🛑 Đã dừng spam.")
 
-    # ;ar <@user> <emoji>
+    
     elif message.content.startswith(";ar "):
         try:
             parts = message.content.split(" ")
@@ -161,22 +161,22 @@ async def on_message(message):
         except Exception as e:
             await message.channel.send(f"❌ Lỗi: {e}")
 
-    # ;ur — xoá toàn bộ auto-react
+
     elif message.content.strip() == ";ur":
         auto_react_targets.clear()
         await message.channel.send("done")
         await asyncio.sleep(3)
         await message.delete()
 
-    # ;av <@user> — hiện avatar của người được tag hoặc chính mình
+    
     elif message.content.startswith(";av"):
         try:
             if message.mentions:
                 user = message.mentions[0]
             else:
-                user = message.author  # nếu không tag ai → chính mình
+                user = message.author 
 
-            avatar_url = user.display_avatar.url  # full-size avatar (GIF nếu có)
+            avatar_url = user.display_avatar.url  
             await message.channel.send(
                 f"{user.mention} Avatar:\n{avatar_url}",
                 delete_after=10
@@ -187,13 +187,13 @@ async def on_message(message):
             await message.channel.send(f"❌ Lỗi: {e}", delete_after=5)
             await message.delete()
 
-    # ;ping — đo độ trễ
+    
     elif message.content.strip() == ";ping":
         try:
             start = time.perf_counter()
             msg = await message.channel.send("chờ chút...")
             end = time.perf_counter()
-            latency = (end - start) * 1000  # chuyển sang mili giây
+            latency = (end - start) * 1000  
 
             await msg.edit(content=f"🏓 Pong! `{int(latency)}ms`")
             await message.delete()
@@ -201,7 +201,7 @@ async def on_message(message):
             await message.channel.send(f"❌ Lỗi khi đo ping: {e}", delete_after=5)
             await message.delete()
 
-    # ;chui <delay_ms> <@user>
+    
     elif message.content.startswith(";chui "):
         if chui_task and not chui_task.done():
             await message.channel.send("⚠️ Đang chạy `chui` rồi. Dùng `;stopchui` để dừng.")
@@ -243,7 +243,7 @@ async def on_message(message):
             await message.channel.send(f"❌ Lỗi: {e}")
             await message.delete()
 
-    # ;delwh <server_id>
+    
     if message.content.startswith(";delwh "):
         try:
             args = message.content.split(" ")
@@ -271,7 +271,7 @@ async def on_message(message):
         except Exception as e:
             await message.channel.send(f"❌ Lỗi: {e}")
 
-    # ;spam
+    
     if message.content.startswith(";spam "):
         try:
             args = message.content.split(" ", 3)
@@ -306,7 +306,7 @@ async def on_message(message):
         except Exception as e:
             await message.channel.send(f"❌ Lỗi: {e}")
 
-    # ;stopspam
+    
     elif message.content.strip() == ";stopspam":
         if _spam_task and not _spam_task.done():
             _spam_task.cancel()
@@ -314,7 +314,7 @@ async def on_message(message):
         else:
             await message.channel.send("⚠️ Không có spam nào đang chạy.")
 
-    # Nếu có người tag mình → trả lời
+    
     elif client.user in message.mentions and message.author.id != client.user.id:
         try:
             await message.channel.send("TAG CCASICC3M NHÀ MÀY À?")
@@ -322,7 +322,7 @@ async def on_message(message):
             print(f"Lỗi khi rep mention: {e}")
 
 
-    # ;help
+
     elif message.content.strip() == ";help":
         await message.channel.send("""
 📌 **2077 dz vl**
